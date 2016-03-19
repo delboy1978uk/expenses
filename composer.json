@@ -1,0 +1,23 @@
+{
+  "name": "delboy1978uk/expenses",
+  "description": "A expenses project",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Derek McLean",
+      "email": "delboy1978uk@gmail.com"
+    }
+  ],
+  "require": {
+    "delboy1978uk/common": "*"
+  },
+  "require-dev": {
+    "codeception/codeception": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "Del\\Expenses\\": "src/",
+      "DelTesting\\Expenses\\": "tests/unit/"
+    }
+  }
+}
