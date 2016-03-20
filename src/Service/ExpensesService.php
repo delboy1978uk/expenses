@@ -15,7 +15,7 @@ use Pimple\Container;
 class ExpensesService
 {
 
-    /** @var Container $container */
+    /** @var Entry $repository */
     protected $repository;
 
     public function __construct(Container $c)
