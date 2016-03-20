@@ -7,13 +7,14 @@ use Del\Common\Criteria as CommonCriteria;
 
 class EntryCriteria extends CommonCriteria
 {
-    const ORDER_ID              = 'id';
-    const ORDER_DATE            = 'date';
     const ORDER_AMOUNT          = 'amount';
     const ORDER_CATEGORY        = 'category';
+    const ORDER_DATE            = 'date';
     const ORDER_DESCRIPTION     = 'description';
+    const ORDER_ID              = 'id';
     const ORDER_NOTE            = 'note';
     const ORDER_TYPE            = 'type';
+    const ORDER_USERID          = 'userId';
 
     protected $id;
     protected $userId;

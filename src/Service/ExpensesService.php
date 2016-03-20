@@ -16,19 +16,19 @@ class ExpensesService
 {
 
     /** @var Container $container */
-    protected $container;
+    protected $repository;
 
     public function __construct(Container $c)
     {
-        $this->container = $c;
+        $this->repository = $c['doctrine.entity_manager']->getRepository('Del\Expenses\Entity\Entry');
     }
 
     /**
      * @return Entry
      */
-    protected function getRepository()
+    private function getRepository()
     {
-        return $this->container['doctrine.entity_manager']->getRepository('Del\Expenses\Entity\Entry');
+        return $this->repository;
     }
 
     /**
@@ -43,6 +43,7 @@ class ExpensesService
         }
         $entry->setId($data['userId'])
             ->setUserId($data['userId'])
+            ->setCategory($data['category'])
             ->setAmount($data['amount'])
             ->setDate($data['date'])
             ->setDescription($data['description'])
@@ -104,7 +105,7 @@ class ExpensesService
      */
     public function saveIncome(Income $income)
     {
-        return $income;
+        return $this->getRepository()->save($income);
     }
 
     /**
@@ -112,7 +113,7 @@ class ExpensesService
      */
     public function deleteIncome(Income $income)
     {
-        return;
+        $this->deleteEntry($income);
     }
 
     /**
@@ -132,7 +133,7 @@ class ExpensesService
      */
     public function saveExpenditure(Expenditure $expenditure)
     {
-        return $expenditure;
+        return $this->getRepository()->save($expenditure);
     }
 
     /**
@@ -140,15 +141,18 @@ class ExpensesService
      */
     public function deleteExpenditure(Expenditure $expenditure)
     {
-        return;
+        $this->deleteEntry($expenditure);
     }
 
     /**
-     * @param int $id
+     * @param $id
+     * @return Expenditure
      */
     public function findExpenditureById($id)
     {
-
+        $criteria = new EntryCriteria();
+        $criteria->setId($id);
+        return $this->getRepository()->findOneByCriteria($criteria);
     }
 
     /**
@@ -157,7 +161,7 @@ class ExpensesService
      */
     public function saveExpenseClaim(ExpenseClaim $claim)
     {
-        return $claim;
+        return $this->getRepository()->save($claim);
     }
 
     /**
@@ -165,24 +169,35 @@ class ExpensesService
      */
     public function deleteExpenseClaim(ExpenseClaim $claim)
     {
-        return;
+        $this->deleteEntry($claim);
     }
 
     /**
-     * @param int $id
+     * @param $id
+     * @return ExpenseClaim
      */
     public function findExpenseClaimById($id)
     {
-
+        $criteria = new EntryCriteria();
+        $criteria->setId($id);
+        return $this->getRepository()->findOneByCriteria($criteria);
     }
 
     /**
      * @param EntryCriteria $criteria
      * @return array
      */
-    public function findEntryByCriteria(EntryCriteria $criteria)
+    public function findByCriteria(EntryCriteria $criteria)
     {
-        return [];
+        return $this->getRepository()->findByCriteria($criteria);
+    }
+
+    /**
+     * @param EntryInterface $entry
+     */
+    public function deleteEntry(EntryInterface $entry)
+    {
+        $this->getRepository()->delete($entry);
     }
 
 }

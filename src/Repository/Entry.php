@@ -56,7 +56,7 @@ class Entry extends EntityRepository
 
         if($criteria->hasUserId()) {
             $qb->where('e.userId = :userid');
-            $qb->setParameter('userid', $criteria->getId());
+            $qb->setParameter('userid', $criteria->getUserId());
         }
 
         if($criteria->hasDate()) {
@@ -71,7 +71,7 @@ class Entry extends EntityRepository
 
         if($criteria->hasCategory()) {
             $qb->andWhere('e.category = :category');
-            $qb->setParameter('category', $criteria->getAka());
+            $qb->setParameter('category', $criteria->getCategory());
         }
 
         if($criteria->hasDescription()) {
@@ -85,11 +85,21 @@ class Entry extends EntityRepository
         }
 
         if($criteria->hasType()) {
-            $qb->andWhere('e.type = :type');
-            $qb->setParameter('type', $criteria->getType());
+            switch($criteria->getType()) {
+                case 'IN':
+                    $qb->andWhere('e INSTANCE OF Del\Expenses\Entity\Income');
+                    break;
+                case 'OUT':
+                    $qb->andWhere('e INSTANCE OF Del\Expenses\Entity\Expenditure');
+                    break;
+                case 'CLAIM':
+                    $qb->andWhere('e INSTANCE OF Del\Expenses\Entity\ExpenseClaim');
+                    break;
+            }
+
         }
 
-        $criteria->hasOrder() ? $qb->addOrderBy($criteria->getOrder(), $criteria->getOrderDirection()) : null;
+        $criteria->hasOrder() ? $qb->addOrderBy('e.'.$criteria->getOrder(), $criteria->getOrderDirection()) : null;
         $criteria->hasLimit() ? $qb->setMaxResults($criteria->getLimit()) : null;
         $criteria->hasOffset() ? $qb->setFirstResult($criteria->getOffset()) : null;
 

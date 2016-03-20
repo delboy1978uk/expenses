@@ -25,7 +25,7 @@ abstract class Entry implements EntryInterface
     private $userId;
 
     /**
-     * @Column(type="date")
+     * @Column(type="datetime")
      * @var DateTime
      */
     private $date;
@@ -41,8 +41,7 @@ abstract class Entry implements EntryInterface
 
     /** @Column(type="string",length=255,nullable=true) */
     private $note;
-
-
+    
     public function __construct()
     {
         $this->setType();
