@@ -3,6 +3,7 @@
 namespace Del\Expenses\Service;
 
 use DateTime;
+use Del\Expenses\Criteria\EntryCriteria;
 use Del\Expenses\Entity\EntryInterface;
 use Del\Expenses\Entity\Expenditure;
 use Del\Expenses\Entity\ExpenseClaim;
@@ -40,7 +41,9 @@ class ExpensesService
         if(!$data['date'] instanceof DateTime) {
             $data['date'] = new DateTime($data['date']);
         }
-        $entry->setAmount($data['amount'])
+        $entry->setId($data['userId'])
+            ->setUserId($data['userId'])
+            ->setAmount($data['amount'])
             ->setDate($data['date'])
             ->setDescription($data['description'])
             ->setNote($data['note']);
@@ -84,7 +87,14 @@ class ExpensesService
     public function toArray(EntryInterface $entry)
     {
         return [
-
+            'id' => $entry->getId(),
+            'userId' => $entry->getUserId(),
+            'date' => $entry->getDate(),
+            'amount' => $entry->getAmount(),
+            'description' => $entry->getDescription(),
+            'category' => $entry->getCategory(),
+            'note' => $entry->getNote(),
+            'type' => $entry->getType(),
         ];
     }
 
@@ -106,11 +116,14 @@ class ExpensesService
     }
 
     /**
-     * @param int $id
+     * @param $id
+     * @return Income
      */
     public function findIncomeById($id)
     {
-
+        $criteria = new EntryCriteria();
+        $criteria->setId($id);
+        return $this->getRepository()->findOneByCriteria($criteria);
     }
 
     /**
@@ -161,6 +174,15 @@ class ExpensesService
     public function findExpenseClaimById($id)
     {
 
+    }
+
+    /**
+     * @param EntryCriteria $criteria
+     * @return array
+     */
+    public function findEntryByCriteria(EntryCriteria $criteria)
+    {
+        return [];
     }
 
 }

@@ -29,6 +29,17 @@ class Entry extends EntityRepository
     }
 
 
+    /**
+     * @param EntryCriteria $criteria
+     * @return EntryInterface|null
+     */
+    public function findOneByCriteria(EntryCriteria $criteria)
+    {
+        $results = $this->findByCriteria($criteria);
+        return isset($results[0]) ? $results[0] : null;
+    }
+
+
 
     /**
      * @param EntryCriteria $criteria
@@ -43,7 +54,7 @@ class Entry extends EntityRepository
             $qb->setParameter('id', $criteria->getId());
         }
 
-        if($criteria->hasId()) {
+        if($criteria->hasUserId()) {
             $qb->where('e.userId = :userid');
             $qb->setParameter('userid', $criteria->getId());
         }
@@ -83,7 +94,6 @@ class Entry extends EntityRepository
         $criteria->hasOffset() ? $qb->setFirstResult($criteria->getOffset()) : null;
 
         $query = $qb->getQuery();
-
         return $query->getResult();
     }
 }

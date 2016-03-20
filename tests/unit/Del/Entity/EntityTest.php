@@ -27,6 +27,18 @@ class EntityTest extends \Codeception\TestCase\Test
         unset($this->income);
     }
 
+    public function testGetSetId()
+    {
+        $this->income->setId(78);
+        $this->assertEquals(78, $this->income->getId());
+    }
+
+    public function testGetSetUserId()
+    {
+        $this->income->setUserId(78);
+        $this->assertEquals(78, $this->income->getUserId());
+    }
+
     public function testGetSetDate()
     {
         $date = new DateTime('2016-03-16 14:33:45');

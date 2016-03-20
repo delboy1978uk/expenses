@@ -5,7 +5,10 @@ namespace Del\Expenses\Entity;
 use DateTime;
 
 /**
- * @Entity(repositoryClass="\Del\Expenses\Repository\Entry")
+ * @Entity(repositoryClass="Del\Expenses\Repository\Entry")
+ * @InheritanceType("SINGLE_TABLE")
+ * @DiscriminatorColumn(name="type", type="string")
+ * @DiscriminatorMap({"IN" = "Del\Expenses\Entity\Income", "OUT" = "Del\Expenses\Entity\Expenditure", "CLAIM" = "Del\Expenses\Entity\ExpenseClaim"})
  */
 abstract class Entry implements EntryInterface
 {
@@ -27,7 +30,7 @@ abstract class Entry implements EntryInterface
      */
     private $date;
 
-    /** @Column(type="string",length=50,nullable=true) */
+    /** @Column(type="decimal",precision=11,scale=2) */
     private $amount;
 
     /** @Column(type="string",length=50,nullable=true) */
@@ -39,8 +42,6 @@ abstract class Entry implements EntryInterface
     /** @Column(type="string",length=255,nullable=true) */
     private $note;
 
-    /** @Column(type="string",length=50,nullable=true) */
-    protected $type;
 
     public function __construct()
     {
