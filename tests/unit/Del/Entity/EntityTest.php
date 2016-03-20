@@ -70,9 +70,4 @@ class EntityTest extends \Codeception\TestCase\Test
         $this->income->setCategory('Fuel');
         $this->assertEquals('Fuel', $this->income->getCategory());
     }
-
-    public function testGetSetType()
-    {
-        $this->assertEquals('IN', $this->income->getType());
-    }
 }

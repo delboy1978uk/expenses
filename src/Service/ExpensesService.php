@@ -95,7 +95,6 @@ class ExpensesService
             'description' => $entry->getDescription(),
             'category' => $entry->getCategory(),
             'note' => $entry->getNote(),
-            'type' => $entry->getType(),
         ];
     }
 

@@ -41,11 +41,6 @@ abstract class Entry implements EntryInterface
 
     /** @Column(type="string",length=255,nullable=true) */
     private $note;
-    
-    public function __construct()
-    {
-        $this->setType();
-    }
 
     /**
      * @return int
@@ -174,19 +169,4 @@ abstract class Entry implements EntryInterface
         $this->note = $note;
         return $this;
     }
-
-    /**
-     * @return $this
-     */
-    abstract public function setType();
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-
 }

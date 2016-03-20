@@ -107,7 +107,6 @@ class ExpensesTest extends \Codeception\TestCase\Test
         $this->assertArrayHasKey('description',$array);
         $this->assertArrayHasKey('category',$array);
         $this->assertArrayHasKey('note',$array);
-        $this->assertArrayHasKey('type',$array);
     }
 
 

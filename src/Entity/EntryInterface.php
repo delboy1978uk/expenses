@@ -82,15 +82,4 @@ interface EntryInterface
      */
     public function setNote($note);
 
-    /**
-     * @return $this
-     */
-    public function setType();
-
-    /**
-     * @return string
-     */
-    public function getType();
-
-
 }

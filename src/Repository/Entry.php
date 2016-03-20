@@ -5,9 +5,13 @@ namespace Del\Expenses\Repository;
 use Del\Expenses\Entity\EntryInterface;
 use Del\Expenses\Criteria\EntryCriteria;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 
 class Entry extends EntityRepository
 {
+    /** @var QueryBuilder */
+    private $qb;
+
     /**
      * @param EntryInterface $entry
      * @return EntryInterface
@@ -47,63 +51,151 @@ class Entry extends EntityRepository
      */
     public function findByCriteria(EntryCriteria $criteria)
     {
-        $qb = $this->createQueryBuilder('e');
-
-        if($criteria->hasId()) {
-            $qb->where('e.id = :id');
-            $qb->setParameter('id', $criteria->getId());
-        }
-
-        if($criteria->hasUserId()) {
-            $qb->where('e.userId = :userid');
-            $qb->setParameter('userid', $criteria->getUserId());
-        }
-
-        if($criteria->hasDate()) {
-            $qb->where('e.date = :date');
-            $qb->setParameter('date', $criteria->getDate());
-        }
-
-        if($criteria->hasAmount()) {
-            $qb->where('e.amount = :amount');
-            $qb->setParameter('amount', $criteria->getAmount());
-        }
-
-        if($criteria->hasCategory()) {
-            $qb->andWhere('e.category = :category');
-            $qb->setParameter('category', $criteria->getCategory());
-        }
-
-        if($criteria->hasDescription()) {
-            $qb->andWhere('e.description = :description');
-            $qb->setParameter('description', $criteria->getDescription());
-        }
-
-        if($criteria->hasNote()) {
-            $qb->andWhere('e.note = :note');
-            $qb->setParameter('note', $criteria->getNote());
-        }
-
-        if($criteria->hasType()) {
-            switch($criteria->getType()) {
-                case 'IN':
-                    $qb->andWhere('e INSTANCE OF Del\Expenses\Entity\Income');
-                    break;
-                case 'OUT':
-                    $qb->andWhere('e INSTANCE OF Del\Expenses\Entity\Expenditure');
-                    break;
-                case 'CLAIM':
-                    $qb->andWhere('e INSTANCE OF Del\Expenses\Entity\ExpenseClaim');
-                    break;
-            }
-
-        }
-
-        $criteria->hasOrder() ? $qb->addOrderBy('e.'.$criteria->getOrder(), $criteria->getOrderDirection()) : null;
-        $criteria->hasLimit() ? $qb->setMaxResults($criteria->getLimit()) : null;
-        $criteria->hasOffset() ? $qb->setFirstResult($criteria->getOffset()) : null;
-
-        $query = $qb->getQuery();
+        $this->qb = $this->createQueryBuilder('e');
+        $this->checkId($criteria);
+        $this->checkUserId($criteria);
+        $this->checkDate($criteria);
+        $this->checkAmount($criteria);
+        $this->checkCategory($criteria);
+        $this->checkDescription($criteria);
+        $this->checkNote($criteria);
+        $this->checkType($criteria);
+        $this->checkOrder($criteria);
+        $this->checkLimit($criteria);
+        $this->checkOffset($criteria);
+        $query = $this->qb->getQuery();
+        unset($this->qb);
         return $query->getResult();
     }
+
+    /**
+     * @param EntryCriteria $criteria
+     */
+    private function checkId(EntryCriteria $criteria)
+    {
+        if($criteria->hasId()) {
+            $this->qb->where('e.id = :id');
+            $this->qb->setParameter('id', $criteria->getId());
+        }
+    }
+
+    /**
+     * @param EntryCriteria $criteria
+     */
+    private function checkUserId(EntryCriteria $criteria)
+    {
+        if($criteria->hasUserId()) {
+            $this->qb->where('e.userId = :userid');
+            $this->qb->setParameter('userid', $criteria->getUserId());
+        }
+    }
+
+    /**
+     * @param EntryCriteria $criteria
+     */
+    private function checkDate(EntryCriteria $criteria)
+    {
+        if($criteria->hasDate()) {
+            $this->qb->where('e.date = :date');
+            $this->qb->setParameter('date', $criteria->getDate());
+        }
+    }
+
+    /**
+     * @param EntryCriteria $criteria
+     */
+    private function checkAmount(EntryCriteria $criteria)
+    {
+        if($criteria->hasAmount()) {
+            $this->qb->where('e.amount = :amount');
+            $this->qb->setParameter('amount', $criteria->getAmount());
+        }
+    }
+
+    /**
+     * @param EntryCriteria $criteria
+     */
+    private function checkCategory(EntryCriteria $criteria)
+    {
+        if($criteria->hasCategory()) {
+            $this->qb->andWhere('e.category = :category');
+            $this->qb->setParameter('category', $criteria->getCategory());
+        }
+    }
+
+    /**
+     * @param EntryCriteria $criteria
+     */
+    private function checkDescription(EntryCriteria $criteria)
+    {
+        if($criteria->hasDescription()) {
+            $this->qb->andWhere('e.description = :description');
+            $this->qb->setParameter('description', $criteria->getDescription());
+        }
+    }
+
+    /**
+     * @param EntryCriteria $criteria
+     */
+    private function checkNote(EntryCriteria $criteria)
+    {
+        if($criteria->hasNote()) {
+            $this->qb->andWhere('e.note = :note');
+            $this->qb->setParameter('note', $criteria->getNote());
+        }
+    }
+
+    /**
+     * @param EntryCriteria $criteria
+     */
+    private function checkType(EntryCriteria $criteria)
+    {
+        if($criteria->hasType()) {
+            $this->processType($criteria);
+        }
+    }
+
+    /**
+     * @param EntryCriteria $criteria
+     */
+    private function processType(EntryCriteria $criteria)
+    {
+        switch($criteria->getType()) {
+            case 'IN':
+                $this->qb->andWhere('e INSTANCE OF Del\Expenses\Entity\Income');
+                break;
+            case 'OUT':
+                $this->qb->andWhere('e INSTANCE OF Del\Expenses\Entity\Expenditure');
+                break;
+            case 'CLAIM':
+                $this->qb->andWhere('e INSTANCE OF Del\Expenses\Entity\ExpenseClaim');
+                break;
+        }
+    }
+
+    /**
+     * @param EntryCriteria $criteria
+     */
+    private function checkOrder(EntryCriteria $criteria)
+    {
+        $criteria->hasOrder() ? $this->qb->addOrderBy('e.'.$criteria->getOrder(), $criteria->getOrderDirection()) : null;
+
+    }
+
+    /**
+     * @param EntryCriteria $criteria
+     */
+    private function checkLimit(EntryCriteria $criteria)
+    {
+        $criteria->hasLimit() ? $this->qb->setMaxResults($criteria->getLimit()) : null;
+    }
+
+    /**
+     * @param EntryCriteria $criteria
+     */
+    private function checkOffset(EntryCriteria $criteria)
+    {
+        $criteria->hasOffset() ? $this->qb->setFirstResult($criteria->getOffset()) : null;
+    }
+
 }
