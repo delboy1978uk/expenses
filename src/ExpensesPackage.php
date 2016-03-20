@@ -24,7 +24,7 @@ class ExpensesPackage implements RegistrationInterface
     /**
      * @return string
      */
-    function getEntityPath()
+    public function getEntityPath()
     {
         return 'vendor/delboy1978uk/expenses/src/Entity';
     }
@@ -32,7 +32,7 @@ class ExpensesPackage implements RegistrationInterface
     /**
      * @return bool
      */
-    function hasEntityPath()
+    public function hasEntityPath()
     {
         return true;
     }
