@@ -75,7 +75,7 @@ class Entry extends EntityRepository
     private function checkId(EntryCriteria $criteria)
     {
         if($criteria->hasId()) {
-            $this->qb->where('e.id = :id');
+            $this->qb->andWhere('e.id = :id');
             $this->qb->setParameter('id', $criteria->getId());
         }
     }
@@ -86,7 +86,7 @@ class Entry extends EntityRepository
     private function checkUserId(EntryCriteria $criteria)
     {
         if($criteria->hasUserId()) {
-            $this->qb->where('e.userId = :userid');
+            $this->qb->andWhere('e.userId = :userid');
             $this->qb->setParameter('userid', $criteria->getUserId());
         }
     }
@@ -97,7 +97,7 @@ class Entry extends EntityRepository
     private function checkDate(EntryCriteria $criteria)
     {
         if($criteria->hasDate()) {
-            $this->qb->where('e.date = :date');
+            $this->qb->andWhere('e.date = :date');
             $this->qb->setParameter('date', $criteria->getDate());
         }
     }
@@ -108,7 +108,7 @@ class Entry extends EntityRepository
     private function checkDateRange(EntryCriteria $criteria)
     {
         if($criteria->hasDateRange()) {
-            $this->qb->where('e.date BETWEEN :fromdate AND :todate');
+            $this->qb->andWhere('e.date BETWEEN :fromdate AND :todate');
             $this->qb->setParameter('fromdate', $criteria->getDateRange()[0]);
             $this->qb->setParameter('todate', $criteria->getDateRange()[1]);
         }
@@ -120,7 +120,7 @@ class Entry extends EntityRepository
     private function checkAmount(EntryCriteria $criteria)
     {
         if($criteria->hasAmount()) {
-            $this->qb->where('e.amount = :amount');
+            $this->qb->andWhere('e.amount = :amount');
             $this->qb->setParameter('amount', $criteria->getAmount());
         }
     }
