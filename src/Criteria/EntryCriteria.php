@@ -2,6 +2,7 @@
 
 namespace Del\Expenses\Criteria;
 
+use DateTime;
 use Del\Common\Criteria as CommonCriteria;
 
 
@@ -19,6 +20,7 @@ class EntryCriteria extends CommonCriteria
     protected $id;
     protected $userId;
     protected $date;
+    protected $dateRange;
     protected $amount;
     protected $category;
     protected $description;
@@ -92,6 +94,35 @@ class EntryCriteria extends CommonCriteria
     public function setDate($date)
     {
         $this->date = $date;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasDateRange()
+    {
+        return $this->dateRange != null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateRange()
+    {
+        return $this->dateRange;
+    }
+
+    /**
+     * @param string $fromDate
+     * @param string $toDate
+     * @return $this
+     */
+    public function setDateRange($fromDate, $toDate)
+    {
+        $this->dateRange = [
+            $fromDate, $toDate
+        ];
         return $this;
     }
 

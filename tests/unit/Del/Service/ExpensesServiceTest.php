@@ -222,6 +222,20 @@ class ExpensesTest extends \Codeception\TestCase\Test
         $this->assertInstanceOf('Del\Expenses\Entity\Income', $entity);
 
         $criteria = new EntryCriteria();
+        $criteria->setDate('2016-03-20 01:44:00');
+        $results = $this->svc->findByCriteria($criteria);
+        $this->assertNotEmpty($results);
+        $entity = $results[0];
+        $this->assertInstanceOf('Del\Expenses\Entity\Income', $entity);
+
+        $criteria = new EntryCriteria();
+        $criteria->setDateRange('2016-03-19 01:44:00','2016-03-21 01:44:00');
+        $results = $this->svc->findByCriteria($criteria);
+        $this->assertNotEmpty($results);
+        $entity = $results[0];
+        $this->assertInstanceOf('Del\Expenses\Entity\Income', $entity);
+
+        $criteria = new EntryCriteria();
         $criteria->setAmount(100);
         $results = $this->svc->findByCriteria($criteria);
         $this->assertNotEmpty($results);

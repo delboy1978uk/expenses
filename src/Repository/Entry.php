@@ -55,6 +55,7 @@ class Entry extends EntityRepository
         $this->checkId($criteria);
         $this->checkUserId($criteria);
         $this->checkDate($criteria);
+        $this->checkDateRange($criteria);
         $this->checkAmount($criteria);
         $this->checkCategory($criteria);
         $this->checkDescription($criteria);
@@ -98,6 +99,18 @@ class Entry extends EntityRepository
         if($criteria->hasDate()) {
             $this->qb->where('e.date = :date');
             $this->qb->setParameter('date', $criteria->getDate());
+        }
+    }
+
+    /**
+     * @param EntryCriteria $criteria
+     */
+    private function checkDateRange(EntryCriteria $criteria)
+    {
+        if($criteria->hasDateRange()) {
+            $this->qb->where('e.date BETWEEN :fromdate AND :todate');
+            $this->qb->setParameter('fromdate', $criteria->getDateRange()[0]);
+            $this->qb->setParameter('todate', $criteria->getDateRange()[1]);
         }
     }
 
