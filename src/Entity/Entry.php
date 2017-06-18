@@ -3,12 +3,13 @@
 namespace Del\Expenses\Entity;
 
 use DateTime;
+use Del\Expenses\Value\Category;
 
 /**
- * @Entity(repositoryClass="Del\Expenses\Repository\Entry")
+ * @Entity(repositoryClass="Del\Expenses\Repository\EntryRepository")
  * @InheritanceType("SINGLE_TABLE")
  * @DiscriminatorColumn(name="type", type="string")
- * @DiscriminatorMap({"IN" = "Del\Expenses\Entity\Income", "OUT" = "Del\Expenses\Entity\Expenditure", "CLAIM" = "Del\Expenses\Entity\ExpenseClaim"})
+ * @DiscriminatorMap({"IN" = "Del\Expenses\Entity\Income", "OUT" = "Del\Expenses\Entity\Expenditure"})
  */
 abstract class Entry implements EntryInterface
 {
@@ -117,20 +118,20 @@ abstract class Entry implements EntryInterface
     }
 
     /**
-     * @return string
+     * @return Category
      */
     public function getCategory()
     {
-        return $this->category;
+        return new Category($this->category);
     }
 
     /**
-     * @param string $category
+     * @param Category $category
      * @return Entry
      */
-    public function setCategory($category)
+    public function setCategory(Category $category)
     {
-        $this->category = $category;
+        $this->category = $category->getValue();
         return $this;
     }
 
@@ -169,4 +170,6 @@ abstract class Entry implements EntryInterface
         $this->note = $note;
         return $this;
     }
+
+
 }

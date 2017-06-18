@@ -14,7 +14,11 @@ class ExpensesPackage implements RegistrationInterface
     public function addToContainer(Container $c)
     {
         $function = function($c){
-            $svc = new ExpensesService($c);
+            /** @var \Doctrine\ORM\EntityManager $em */
+            $em = $c['doctrine.entity_manager'];
+            /** @var \Del\Expenses\Repository\EntryRepository $repository */
+            $repository = $em->getRepository('Del\Expenses\Entity\Entry');
+            $svc = new ExpensesService($repository);
             return $svc;
         };
 

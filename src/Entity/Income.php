@@ -7,7 +7,7 @@ namespace Del\Expenses\Entity;
  * @package Del\Expenses\Entity
  * @Entity
  */
-class Income extends Entry
+class Income extends Entry implements EntryInterface
 {
 
 }

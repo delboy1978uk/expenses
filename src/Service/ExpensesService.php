@@ -6,25 +6,27 @@ use DateTime;
 use Del\Expenses\Criteria\EntryCriteria;
 use Del\Expenses\Entity\EntryInterface;
 use Del\Expenses\Entity\Expenditure;
-use Del\Expenses\Entity\ExpenseClaim;
 use Del\Expenses\Entity\Income;
-use Del\Expenses\Repository\Entry;
-use Pimple\Container;
+use Del\Expenses\Repository\EntryRepository;
+use Del\Expenses\Value\Category;
 
 
 class ExpensesService
 {
+    /** @var float $vatRate */
+    private $vatRate;
 
-    /** @var Entry $repository */
+    /** @var EntryRepository $repository */
     protected $repository;
 
-    public function __construct(Container $c)
+    public function __construct(EntryRepository $repository, $vatRate = 20)
     {
-        $this->repository = $c['doctrine.entity_manager']->getRepository('Del\Expenses\Entity\Entry');
+        $this->vatRate = $vatRate;
+        $this->repository = $repository;
     }
 
     /**
-     * @return Entry
+     * @return EntryRepository
      */
     private function getRepository()
     {
@@ -43,7 +45,7 @@ class ExpensesService
         }
         $entry->setId($data['userId'])
             ->setUserId($data['userId'])
-            ->setCategory($data['category'])
+            ->setCategory(new Category($data['category']))
             ->setAmount($data['amount'])
             ->setDate($data['date'])
             ->setDescription($data['description'])
@@ -57,6 +59,7 @@ class ExpensesService
     public function createExpenditureFromArray(array $data)
     {
         $expenditure = new Expenditure();
+        /** @var Expenditure $expenditure */
         $expenditure = $this->setFromArray($data, $expenditure);
         return $expenditure;
     }
@@ -67,18 +70,9 @@ class ExpensesService
     public function createIncomeFromArray(array $data)
     {
         $income = new Income();
+        /** @var Income $income */
         $income = $this->setFromArray($data, $income);
         return $income;
-    }
-
-    /**
-     * @return ExpenseClaim
-     */
-    public function createExpenseClaimFromArray(array $data)
-    {
-        $claim = new ExpenseClaim();
-        $claim = $this->setFromArray($data, $claim);
-        return $claim;
     }
 
     /**
@@ -93,7 +87,7 @@ class ExpensesService
             'date' => $entry->getDate(),
             'amount' => $entry->getAmount(),
             'description' => $entry->getDescription(),
-            'category' => $entry->getCategory(),
+            'category' => $entry->getCategory()->getValue(),
             'note' => $entry->getNote(),
         ];
     }
@@ -155,34 +149,6 @@ class ExpensesService
     }
 
     /**
-     * @param ExpenseClaim $claim
-     * @return ExpenseClaim
-     */
-    public function saveExpenseClaim(ExpenseClaim $claim)
-    {
-        return $this->getRepository()->save($claim);
-    }
-
-    /**
-     * @param ExpenseClaim $claim
-     */
-    public function deleteExpenseClaim(ExpenseClaim $claim)
-    {
-        $this->deleteEntry($claim);
-    }
-
-    /**
-     * @param $id
-     * @return ExpenseClaim
-     */
-    public function findExpenseClaimById($id)
-    {
-        $criteria = new EntryCriteria();
-        $criteria->setId($id);
-        return $this->getRepository()->findOneByCriteria($criteria);
-    }
-
-    /**
      * @param EntryCriteria $criteria
      * @return array
      */
@@ -199,4 +165,21 @@ class ExpensesService
         $this->getRepository()->delete($entry);
     }
 
+    /**
+     * @return float
+     */
+    public function getVatRate()
+    {
+        return $this->vatRate;
+    }
+
+    /**
+     * @param float $vatRate
+     * @return ExpensesService
+     */
+    public function setVatRate($vatRate)
+    {
+        $this->vatRate = $vatRate;
+        return $this;
+    }
 }

@@ -4,17 +4,19 @@ namespace Del\Expenses\Repository;
 
 use Del\Expenses\Entity\EntryInterface;
 use Del\Expenses\Criteria\EntryCriteria;
+use Del\Expenses\Entity\Expenditure;
+use Del\Expenses\Entity\Income;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
-class Entry extends EntityRepository
+class EntryRepository extends EntityRepository
 {
     /** @var QueryBuilder */
     private $qb;
 
     /**
      * @param EntryInterface $entry
-     * @return EntryInterface
+     * @return EntryInterface|Income|Expenditure
      */
     public function save(EntryInterface $entry)
     {
@@ -35,7 +37,7 @@ class Entry extends EntityRepository
 
     /**
      * @param EntryCriteria $criteria
-     * @return EntryInterface|null
+     * @return EntryInterface|Income|Expenditure|null
      */
     public function findOneByCriteria(EntryCriteria $criteria)
     {

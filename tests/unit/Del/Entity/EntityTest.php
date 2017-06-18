@@ -4,6 +4,7 @@ namespace DelTesting\Service;
 
 use DateTime;
 use Del\Expenses\Entity\Income;
+use Del\Expenses\Value\Category;
 
 class EntityTest extends \Codeception\TestCase\Test
 {
@@ -67,7 +68,7 @@ class EntityTest extends \Codeception\TestCase\Test
 
     public function testGetSetCategory()
     {
-        $this->income->setCategory('Fuel');
-        $this->assertEquals('Fuel', $this->income->getCategory());
+        $this->income->setCategory(new Category(Category::INCOME_INVOICE));
+        $this->assertEquals('invoice', $this->income->getCategory()->getValue());
     }
 }

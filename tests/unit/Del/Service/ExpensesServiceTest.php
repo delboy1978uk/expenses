@@ -2,18 +2,16 @@
 
 namespace DelTesting\Service;
 
-use Codeception\Module\Db;
+use Codeception\Test\Unit;
 use DateTime;
 use Del\Common\ContainerService;
 use Del\Expenses\Criteria\EntryCriteria;
-use Del\Expenses\ExpensesPackage;
 use Del\Expenses\Entity\Expenditure;
-use Del\Expenses\Entity\ExpenseClaim;
 use Del\Expenses\Entity\Income;
 use Del\Expenses\Service\ExpensesService;
-use Del\Common\Config\DbCredentials;
+use Del\Expenses\Value\Category;
 
-class ExpensesTest extends \Codeception\TestCase\Test
+class ExpensesServiceTest extends Unit
 {
     /**
      * @var \UnitTester
@@ -27,11 +25,6 @@ class ExpensesTest extends \Codeception\TestCase\Test
 
     protected function _before()
     {
-        $creds = new DbCredentials();
-        $creds->setDatabase('expenses');
-        $package = new ExpensesPackage();
-        ContainerService::getInstance()->registerToContainer($package);
-        ContainerService::getInstance()->setDbCredentials($creds);
         $container = ContainerService::getInstance()->getContainer();
         $this->svc = $container['service.expenses'];
     }
@@ -48,7 +41,7 @@ class ExpensesTest extends \Codeception\TestCase\Test
             'userId' => 10,
             'date' => new DateTime(),
             'amount' => 350.00,
-            'category' => 'Accomodation',
+            'category' => 'accommodation',
             'description' => 'Rent',
             'note' => 'note about this payment',
         ];
@@ -63,42 +56,27 @@ class ExpensesTest extends \Codeception\TestCase\Test
             'userId' => 10,
             'date' => '2016-04-07 09:00:00',
             'amount' => 6500.00,
-            'category' => 'Accomodation',
-            'description' => 'Rent',
+            'category' => Category::INCOME_INVOICE,
+            'description' => 'paid for work',
             'note' => 'note about this income',
         ];
         $income = $this->svc->createIncomeFromArray($incomeArray);
         $this->assertInstanceOf('Del\Expenses\Entity\Income', $income);
     }
 
-    public function testExpenseClaimFromArray()
-    {
-        $claimArray = [
-            'id' => 1,
-            'userId' => 10,
-            'date' => '2016-04-07 09:00:00',
-            'category' => 'Travel',
-            'amount' => 300.00,
-            'description' => 'Rail Tickets',
-            'note' => 'note about this expense claim',
-        ];
-        $claim = $this->svc->createExpenseClaimFromArray($claimArray);
-        $this->assertInstanceOf('Del\Expenses\Entity\ExpenseClaim', $claim);
-    }
-
     public function testToArray()
     {
-        $claimArray = [
+        $expense = [
             'id' => 1,
             'userId' => 10,
             'date' => '2016-04-07 09:00:00',
-            'category' => 'Travel',
+            'category' => Category::EXPENSE_TRANSPORT,
             'amount' => 300.00,
             'description' => 'Rail Tickets',
             'note' => 'note about this expense claim',
         ];
-        $claim = $this->svc->createExpenseClaimFromArray($claimArray);
-        $this->assertInstanceOf('Del\Expenses\Entity\ExpenseClaim', $claim);
+        $claim = $this->svc->createExpenditureFromArray($expense);
+        $this->assertInstanceOf('Del\Expenses\Entity\Expenditure', $claim);
         $array = $this->svc->toArray($claim);
         $this->assertArrayHasKey('id',$array);
         $this->assertArrayHasKey('userId',$array);
@@ -117,7 +95,7 @@ class ExpensesTest extends \Codeception\TestCase\Test
             'date' => new DateTime(),
             'amount' => 350.00,
             'description' => 'Rent',
-            'category' => 'Working abroad expenses',
+            'category' => Category::EXPENSE_ACCOMMODATION,
             'note' => 'note about this payment',
         ];
         $income = $this->svc->createIncomeFromArray($incomeArray);
@@ -140,7 +118,7 @@ class ExpensesTest extends \Codeception\TestCase\Test
             'date' => new DateTime(),
             'amount' => 350.00,
             'description' => 'Rent',
-            'category' => 'Working abroad expenses',
+            'category' => Category::EXPENSE_ACCOMMODATION,
             'note' => 'note about this payment',
         ];
         $expenditure = $this->svc->createExpenditureFromArray($data);
@@ -156,28 +134,6 @@ class ExpensesTest extends \Codeception\TestCase\Test
     }
 
 
-    public function testSaveFindAndDeleteExpenseClaim()
-    {
-        $data = [
-            'userId' => 10,
-            'date' => new DateTime(),
-            'amount' => 350.00,
-            'description' => 'Rent',
-            'category' => 'Working abroad expenses',
-            'note' => 'note about this payment',
-        ];
-        $claim = $this->svc->createExpenseClaimFromArray($data);
-        $claim = $this->svc->saveExpenseClaim($claim);
-        $id = $claim->getId();
-        $this->assertInstanceOf('Del\Expenses\Entity\ExpenseClaim', $claim);
-        $claim = $this->svc->findExpenseClaimById($id);
-        $this->assertInstanceOf('Del\Expenses\Entity\ExpenseClaim', $claim);
-        $this->assertEquals(10, $claim->getUserId());
-        $this->svc->deleteExpenseClaim($claim);
-        $claim = $this->svc->findExpenseClaimById($id);
-        $this->assertNull($claim);
-    }
-
 
     public function testFindByCriteria()
     {
@@ -186,7 +142,7 @@ class ExpensesTest extends \Codeception\TestCase\Test
             'date' => new DateTime('2016-03-20 01:44:00'),
             'amount' => 10000.00,
             'description' => 'Work done',
-            'category' => 'Income',
+            'category' => Category::INCOME_INVOICE,
             'note' => 'amazing website',
         ];
         $income = $this->svc->createIncomeFromArray($data);
@@ -197,22 +153,11 @@ class ExpensesTest extends \Codeception\TestCase\Test
             'date' => new DateTime('2016-06-06 12:44:00'),
             'amount' => 4000.00,
             'description' => 'Harley Davidson',
-            'category' => 'Travel',
+            'category' => Category::EXPENSE_EQUIPMENT,
             'note' => 'paid by card',
         ];
         $expenditure = $this->svc->createExpenditureFromArray($data);
         $this->svc->saveExpenditure($expenditure);
-
-        $data = [
-            'userId' => 2,
-            'date' => new DateTime('2016-01-01 12:44:00'),
-            'amount' => 100.00,
-            'description' => 'Train Tickets',
-            'category' => 'Travel',
-            'note' => 'paid by cash',
-        ];
-        $claim = $this->svc->createExpenseClaimFromArray($data);
-        $this->svc->saveExpenseClaim($claim);
 
         $criteria = new EntryCriteria();
         $criteria->setDate('2016-03-20 01:44:00');
@@ -236,27 +181,11 @@ class ExpensesTest extends \Codeception\TestCase\Test
         $this->assertInstanceOf('Del\Expenses\Entity\Income', $entity);
 
         $criteria = new EntryCriteria();
-        $criteria->setAmount(100);
-        $results = $this->svc->findByCriteria($criteria);
-        $this->assertNotEmpty($results);
-        $entity = $results[0];
-        $this->assertInstanceOf('Del\Expenses\Entity\ExpenseClaim', $entity);
-
-        $criteria = new EntryCriteria();
-        $criteria->setUserId(2);
-        $results = $this->svc->findByCriteria($criteria);
-        $this->assertNotEmpty($results);
-        $entity = $results[0];
-        $this->assertInstanceOf('Del\Expenses\Entity\ExpenseClaim', $entity);
-
-        $criteria = new EntryCriteria();
-        $criteria->setCategory('Travel');
+        $criteria->setCategory(Category::EXPENSE_EQUIPMENT);
         $criteria->setOrder(EntryCriteria::ORDER_USERID);
         $results = $this->svc->findByCriteria($criteria);
         $this->assertNotEmpty($results);
         $entity = $results[0];
-        $this->assertInstanceOf('Del\Expenses\Entity\ExpenseClaim', $entity);
-        $entity = $results[1];
         $this->assertInstanceOf('Del\Expenses\Entity\Expenditure', $entity);
 
         $criteria = new EntryCriteria();
@@ -272,13 +201,6 @@ class ExpensesTest extends \Codeception\TestCase\Test
         $this->assertNotEmpty($results);
         $entity = $results[0];
         $this->assertInstanceOf('Del\Expenses\Entity\Income', $entity);
-
-        $criteria = new EntryCriteria();
-        $criteria->setType('CLAIM');
-        $results = $this->svc->findByCriteria($criteria);
-        $this->assertNotEmpty($results);
-        $entity = $results[0];
-        $this->assertInstanceOf('Del\Expenses\Entity\ExpenseClaim', $entity);
 
         $criteria = new EntryCriteria();
         $criteria->setType('IN');
@@ -303,8 +225,6 @@ class ExpensesTest extends \Codeception\TestCase\Test
                 $this->svc->deleteIncome($result);
             } elseif ($result instanceof Expenditure) {
                 $this->svc->deleteExpenditure($result);
-            } elseif ($result instanceof ExpenseClaim) {
-                $this->svc->deleteExpenseClaim($result);
             }
         }
 

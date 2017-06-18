@@ -3,6 +3,7 @@
 namespace Del\Expenses\Entity;
 
 use DateTime;
+use Del\Expenses\Value\Category;
 
 interface EntryInterface
 {
@@ -50,15 +51,15 @@ interface EntryInterface
     public function setAmount($amount);
 
     /**
-     * @return string
+     * @return Category
      */
     public function getCategory();
 
     /**
-     * @param string $category
+     * @param Category $category
      * @return Entry
      */
-    public function setCategory($category);
+    public function setCategory(Category $category);
 
     /**
      * @return string

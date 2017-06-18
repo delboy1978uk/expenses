@@ -3,9 +3,10 @@
 return [
     'db' => [
         'driver' => 'pdo_mysql',
+        'host' => 'mariadb',
         'dbname' => 'expenses',
-        'user' => 'dbuser',
-        'password' => '[123456]',
+        'user' => 'root',
+        'password' => '12345',
     ],
     'packages' => [
     ],
