@@ -25,3 +25,4 @@ extras/documentation
 
 #test output
 tests/_output
+migrant-cfg.local.php

@@ -4,30 +4,30 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "6b17c3db1f6b162abdaf1ba6b0ae4673",
+    "content-hash": "366ac30bb4105dada4e19643b9036298",
     "packages": [
         {
             "name": "delboy1978uk/common",
-            "version": "v2.3.20",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/delboy1978uk/common.git",
-                "reference": "c2cfd5e7d181daf7e495ae0c9ce1aa44b074c754"
+                "reference": "feded6294a90b5d41d58b4163167b0a63b80e95b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/delboy1978uk/common/zipball/c2cfd5e7d181daf7e495ae0c9ce1aa44b074c754",
-                "reference": "c2cfd5e7d181daf7e495ae0c9ce1aa44b074c754",
+                "url": "https://api.github.com/repos/delboy1978uk/common/zipball/feded6294a90b5d41d58b4163167b0a63b80e95b",
+                "reference": "feded6294a90b5d41d58b4163167b0a63b80e95b",
                 "shasum": ""
             },
             "require": {
-                "doctrine/migrations": "1.1.0",
-                "doctrine/orm": "2.5.1",
-                "pimple/pimple": "3.0.2",
-                "symfony/console": "2.8.1"
+                "doctrine/migrations": "^1.1.0",
+                "doctrine/orm": "^2.5.1",
+                "pimple/pimple": "^3.0.2",
+                "symfony/console": "^2.8.1"
             },
             "require-dev": {
-                "codeception/codeception": "2.1.3"
+                "codeception/codeception": "^2.1.3"
             },
             "bin": [
                 "bin/migrant"
@@ -50,7 +50,7 @@
                 }
             ],
             "description": "Stuff that winds up in every project",
-            "time": "2017-04-21T15:16:31+00:00"
+            "time": "2017-06-19T00:46:16+00:00"
         },
         {
             "name": "doctrine/annotations",

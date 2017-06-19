@@ -8,6 +8,10 @@ use Del\Expenses\ExpensesPackage;
 $package = new ExpensesPackage();
 
 $config = require_once 'migrant-cfg.php';
+
+if (file_exists('migrant-cfg.local.php')) {
+    $config = array_merge($config, require_once 'migrant-cfg.local.php');
+}
 $credentials = new DbCredentials($config['db']);
 
 $containerSvc = ContainerService::getInstance();
