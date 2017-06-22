@@ -182,9 +182,6 @@ class EntryRepository extends EntityRepository
             case 'OUT':
                 $this->qb->andWhere('e INSTANCE OF Del\Expenses\Entity\Expenditure');
                 break;
-            case 'CLAIM':
-                $this->qb->andWhere('e INSTANCE OF Del\Expenses\Entity\ExpenseClaim');
-                break;
         }
     }
 

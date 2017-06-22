@@ -40,7 +40,10 @@ class ExpensesServiceTest extends Unit
             'id' => 1,
             'userId' => 10,
             'date' => new DateTime(),
-            'amount' => 350.00,
+            'amount' => 300.00,
+            'vatRate' => 20,
+            'vat' => 50.00,
+            'total' => 350.00,
             'category' => 'accommodation',
             'description' => 'Rent',
             'note' => 'note about this payment',
@@ -55,7 +58,10 @@ class ExpensesServiceTest extends Unit
             'id' => 1,
             'userId' => 10,
             'date' => '2016-04-07 09:00:00',
-            'amount' => 6500.00,
+            'amount' => 5000.00,
+            'vatRate' => 20,
+            'vat' => 1000.00,
+            'total' => 6000.00,
             'category' => Category::INCOME_INVOICE,
             'description' => 'paid for work',
             'note' => 'note about this income',
@@ -72,6 +78,9 @@ class ExpensesServiceTest extends Unit
             'date' => '2016-04-07 09:00:00',
             'category' => Category::EXPENSE_TRANSPORT,
             'amount' => 300.00,
+            'vatRate' => 0,
+            'vat' => 0,
+            'total' => 300.00,
             'description' => 'Rail Tickets',
             'note' => 'note about this expense claim',
         ];
@@ -82,6 +91,9 @@ class ExpensesServiceTest extends Unit
         $this->assertArrayHasKey('userId',$array);
         $this->assertArrayHasKey('date',$array);
         $this->assertArrayHasKey('amount',$array);
+        $this->assertArrayHasKey('vatRate',$array);
+        $this->assertArrayHasKey('vat',$array);
+        $this->assertArrayHasKey('total',$array);
         $this->assertArrayHasKey('description',$array);
         $this->assertArrayHasKey('category',$array);
         $this->assertArrayHasKey('note',$array);
@@ -94,8 +106,11 @@ class ExpensesServiceTest extends Unit
             'userId' => 10,
             'date' => new DateTime(),
             'amount' => 350.00,
-            'description' => 'Rent',
-            'category' => Category::EXPENSE_ACCOMMODATION,
+            'vatRate' => 20,
+            'vat' => 70.00,
+            'total' => 420.00,
+            'description' => 'work for joe',
+            'category' => Category::INCOME_INVOICE,
             'note' => 'note about this payment',
         ];
         $income = $this->svc->createIncomeFromArray($incomeArray);

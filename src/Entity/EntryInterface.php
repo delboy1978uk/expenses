@@ -83,4 +83,37 @@ interface EntryInterface
      */
     public function setNote($note);
 
+    /**
+     * @return float
+     */
+    public function getVatRate();
+
+    /**
+     * @param float $vatRate
+     * @return Entry
+     */
+    public function setVatRate($vatRate);
+
+    /**
+     * @return float
+     */
+    public function getVat();
+
+    /**
+     * @param float $vat
+     * @return Entry
+     */
+    public function setVat($vat);
+
+    /**
+     * @return float
+     */
+    public function getTotal();
+
+    /**
+     * @param float $total
+     * @return Entry
+     */
+    public function setTotal($total);
+
 }

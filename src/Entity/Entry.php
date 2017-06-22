@@ -4,6 +4,7 @@ namespace Del\Expenses\Entity;
 
 use DateTime;
 use Del\Expenses\Value\Category;
+use LogicException;
 
 /**
  * @Entity(repositoryClass="Del\Expenses\Repository\EntryRepository")
@@ -13,6 +14,10 @@ use Del\Expenses\Value\Category;
  */
 abstract class Entry implements EntryInterface
 {
+    const VAT_NONE = 0;
+    const VAT_EXC = 1;
+    const VAT_INC = 2;
+
     /**
      * @Id
      * @Column(type="integer")
@@ -34,6 +39,24 @@ abstract class Entry implements EntryInterface
     /** @Column(type="decimal",precision=11,scale=2) */
     private $amount;
 
+    /**
+     * @Column(type="decimal",precision=11,scale=2)
+     * @var float $vatRate
+     */
+    private $vatRate;
+
+    /**
+     * @Column(type="decimal",precision=11,scale=2)
+     * @var float
+     */
+    private $vat;
+
+    /**
+     * @Column(type="decimal",precision=11,scale=2)
+     * @var float
+     */
+    private $total;
+
     /** @Column(type="string",length=50,nullable=true) */
     private $category;
 
@@ -42,6 +65,18 @@ abstract class Entry implements EntryInterface
 
     /** @Column(type="string",length=255,nullable=true) */
     private $note;
+
+    /**
+     * Entry constructor.
+     * @param int $vatRate
+     */
+    public function __construct($vatRate = 0)
+    {
+        $this->vatRate = $vatRate;
+        $this->amount = 0;
+        $this->vat = 0;
+        $this->total = 0;
+    }
 
     /**
      * @return int
@@ -111,9 +146,35 @@ abstract class Entry implements EntryInterface
      * @param float $amount
      * @return Entry
      */
-    public function setAmount($amount)
+    public function setAmount($amount, $vatPaid = self::VAT_NONE)
     {
+        if ($vatPaid != self::VAT_NONE && $this->vatRate == 0) {
+
+            throw new LogicException('Set a VAT rate before setting the amount, if inc/ex VAT');
+
+        } elseif ($vatPaid == self::VAT_INC) {
+
+            $fraction = 100 / $this->vatRate;
+            $fraction ++ ;
+            $vatAmount = $amount / $fraction;
+            $total = $amount;
+            $amount = $amount - $vatAmount;
+
+        } elseif ($vatPaid == self::VAT_EXC) {
+
+            $vatAmount = ($amount / 100) * $this->vatRate;
+            $total = $amount + $vatAmount;
+
+        } else {
+
+            $vatAmount = 0;
+            $total = $amount;
+            $this->vatRate = 0;
+
+        }
         $this->amount = $amount;
+        $this->vat = $vatAmount;
+        $this->total = $total;
         return $this;
     }
 
@@ -171,5 +232,57 @@ abstract class Entry implements EntryInterface
         return $this;
     }
 
+    /**
+     * @return float
+     */
+    public function getVatRate()
+    {
+        return $this->vatRate;
+    }
 
+    /**
+     * @param float $vatRate
+     * @return Entry
+     */
+    public function setVatRate($vatRate)
+    {
+        $this->vatRate = $vatRate;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getVat()
+    {
+        return $this->vat;
+    }
+
+    /**
+     * @param float $vat
+     * @return Entry
+     */
+    public function setVat($vat)
+    {
+        $this->vat = $vat;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getTotal()
+    {
+        return $this->total;
+    }
+
+    /**
+     * @param float $total
+     * @return Entry
+     */
+    public function setTotal($total)
+    {
+        $this->total = $total;
+        return $this;
+    }
 }
