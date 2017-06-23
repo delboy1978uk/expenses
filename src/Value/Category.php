@@ -7,8 +7,11 @@ use InvalidArgumentException;
 
 class Category implements ValueInterface
 {
+
+    const INCOME_CASH_JOB ='Cash';
     const INCOME_INVOICE = 'invoice';
     const INCOME_LOAN_REPAYMENT = 'loanpayback';
+    const INCOME_INCOME_REBATE => 'Rebate',
 
     const EXPENSE_ACCOMMODATION = 'accommodation';
     const EXPENSE_BILL = 'bill';
