@@ -8,10 +8,10 @@ use InvalidArgumentException;
 class Category implements ValueInterface
 {
 
-    const INCOME_CASH_JOB ='Cash';
+    const INCOME_CASH_JOB ='cash';
     const INCOME_INVOICE = 'invoice';
     const INCOME_LOAN_REPAYMENT = 'loanpayback';
-    const INCOME_REBATE = 'Rebate';
+    const INCOME_REBATE = 'rebate';
 
     const EXPENSE_ACCOMMODATION = 'accommodation';
     const EXPENSE_BILL = 'bill';
