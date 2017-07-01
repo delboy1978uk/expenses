@@ -43,10 +43,11 @@ class ExpensesService
         if(!$data['date'] instanceof DateTime) {
             $data['date'] = new DateTime($data['date']);
         }
-        $entry->setId($data['userId'])
-            ->setUserId($data['userId'])
+        isset($data['id']) ? $entry->setId($data['id']) : null;
+        $entry->setUserId($data['userId'])
             ->setCategory(new Category($data['category']))
-            ->setAmount($data['amount'])
+            ->setVatRate($data['vatRate'])
+            ->setAmount($data['amount'], $data['vat'])
             ->setDate($data['date'])
             ->setDescription($data['description'])
             ->setNote($data['note']);

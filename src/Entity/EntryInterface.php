@@ -100,20 +100,7 @@ interface EntryInterface
     public function getVat();
 
     /**
-     * @param float $vat
-     * @return Entry
-     */
-    public function setVat($vat);
-
-    /**
      * @return float
      */
     public function getTotal();
-
-    /**
-     * @param float $total
-     * @return Entry
-     */
-    public function setTotal($total);
-
 }

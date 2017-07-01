@@ -259,30 +259,10 @@ abstract class Entry implements EntryInterface
     }
 
     /**
-     * @param float $vat
-     * @return Entry
-     */
-    public function setVat($vat)
-    {
-        $this->vat = $vat;
-        return $this;
-    }
-
-    /**
      * @return float
      */
     public function getTotal()
     {
         return $this->total;
-    }
-
-    /**
-     * @param float $total
-     * @return Entry
-     */
-    public function setTotal($total)
-    {
-        $this->total = $total;
-        return $this;
     }
 }

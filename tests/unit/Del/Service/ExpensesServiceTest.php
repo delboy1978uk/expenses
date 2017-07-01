@@ -42,14 +42,23 @@ class ExpensesServiceTest extends Unit
             'date' => new DateTime(),
             'amount' => 300.00,
             'vatRate' => 20,
-            'vat' => 50.00,
-            'total' => 350.00,
-            'category' => 'accommodation',
+            'vat' => Expenditure::VAT_EXC,
+            'category' => Category::EXPENSE_ACCOMMODATION,
             'description' => 'Rent',
             'note' => 'note about this payment',
         ];
         $expenditure = $this->svc->createExpenditureFromArray($expenditureArray);
         $this->assertInstanceOf('Del\Expenses\Entity\Expenditure', $expenditure);
+        $this->assertEquals(1, $expenditure->getId());
+        $this->assertEquals(10, $expenditure->getUserId());
+        $this->assertInstanceOf('DateTime', $expenditure->getDate());
+        $this->assertEquals(300, $expenditure->getAmount());
+        $this->assertEquals(20.00, $expenditure->getVatRate());
+        $this->assertEquals(60.00, $expenditure->getVat());
+        $this->assertEquals(360.00, $expenditure->getTotal());
+        $this->assertEquals(Category::EXPENSE_ACCOMMODATION, $expenditure->getCategory()->getValue());
+        $this->assertEquals('Rent', $expenditure->getDescription());
+        $this->assertEquals('note about this payment', $expenditure->getNote());
     }
 
     public function testCreateIncomeFromArray()
@@ -107,8 +116,7 @@ class ExpensesServiceTest extends Unit
             'date' => new DateTime(),
             'amount' => 350.00,
             'vatRate' => 20,
-            'vat' => 70.00,
-            'total' => 420.00,
+            'vat' => Income::VAT_EXC,
             'description' => 'work for joe',
             'category' => Category::INCOME_INVOICE,
             'note' => 'note about this payment',
@@ -120,6 +128,9 @@ class ExpensesServiceTest extends Unit
         $income = $this->svc->findIncomeById($id);
         $this->assertInstanceOf('Del\Expenses\Entity\Income', $income);
         $this->assertEquals(10, $income->getUserId());
+        $this->assertEquals(350, $income->getAmount());
+        $this->assertEquals(70, $income->getVat());
+        $this->assertEquals(420, $income->getTotal());
         $this->svc->deleteIncome($income);
         $income = $this->svc->findIncomeById($id);
         $this->assertNull($income);
@@ -132,6 +143,8 @@ class ExpensesServiceTest extends Unit
             'userId' => 10,
             'date' => new DateTime(),
             'amount' => 350.00,
+            'vatRate' => 0,
+            'vat' => 0,
             'description' => 'Rent',
             'category' => Category::EXPENSE_ACCOMMODATION,
             'note' => 'note about this payment',
@@ -159,6 +172,8 @@ class ExpensesServiceTest extends Unit
             'description' => 'Work done',
             'category' => Category::INCOME_INVOICE,
             'note' => 'amazing website',
+            'vatRate' => 0,
+            'vat' => Income::VAT_NONE,
         ];
         $income = $this->svc->createIncomeFromArray($data);
         $this->svc->saveIncome($income);
@@ -170,6 +185,8 @@ class ExpensesServiceTest extends Unit
             'description' => 'Harley Davidson',
             'category' => Category::EXPENSE_EQUIPMENT,
             'note' => 'paid by card',
+            'vatRate' => 0,
+            'vat' => Income::VAT_NONE,
         ];
         $expenditure = $this->svc->createExpenditureFromArray($data);
         $this->svc->saveExpenditure($expenditure);
