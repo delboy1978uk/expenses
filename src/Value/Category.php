@@ -7,6 +7,7 @@ use InvalidArgumentException;
 
 class Category implements ValueInterface
 {
+    const CATEGORY_UNDEFINED = 'undefined';
 
     const INCOME_CASH_JOB ='cash';
     const INCOME_INVOICE = 'invoice';
