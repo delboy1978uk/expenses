@@ -41,7 +41,8 @@ class Category implements ValueInterface
         self::EXPENSE_ACCOUNTANCY, self::EXPENSE_BILL, self::EXPENSE_EQUIPMENT, self::EXPENSE_EQUPIMENT_HIRE,
         self::EXPENSE_FOOD, self::EXPENSE_FUEL, self::EXPENSE_GENERAL, self::EXPENSE_IT, self::EXPENSE_INSURANCE,
         self::EXPENSE_LOAN, self::EXPENSE_MISC, self::EXPENSE_PERSONAL, self::EXPENSE_RENT, self::EXPENSE_REPAIRS,
-        self::EXPENSE_SERVICES, self::EXPENSE_SUPPLIES, self::EXPENSE_TAX, self::EXPENSE_TRANSPORT, self::EXPENSE_WAGES
+        self::EXPENSE_SERVICES, self::EXPENSE_SUPPLIES, self::EXPENSE_TAX, self::EXPENSE_TRANSPORT, self::EXPENSE_WAGES,
+        self::CATEGORY_UNDEFINED
     ];
 
     /** @var string $value */

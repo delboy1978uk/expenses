@@ -113,7 +113,7 @@ abstract class Entry implements EntryInterface
         $this->userId = $userId;
         return $this;
     }
-    
+
     /**
      * @return DateTime
      */
