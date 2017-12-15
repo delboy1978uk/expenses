@@ -3,6 +3,7 @@
 namespace Del\Expenses\Value;
 
 use Del\Common\Value\ValueInterface;
+use Del\Expenses\Entity\Income;
 use InvalidArgumentException;
 
 class Category implements ValueInterface
@@ -37,12 +38,12 @@ class Category implements ValueInterface
     const EXPENSE_WAGES = 'wages';
 
     private $acceptableValues = [
-        self::INCOME_CASH_JOB, self::INCOME_INVOICE, self::INCOME_LOAN_REPAYMENT, self::EXPENSE_ACCOMMODATION,
-        self::EXPENSE_ACCOUNTANCY, self::EXPENSE_BILL, self::EXPENSE_EQUIPMENT, self::EXPENSE_EQUPIMENT_HIRE,
-        self::EXPENSE_FOOD, self::EXPENSE_FUEL, self::EXPENSE_GENERAL, self::EXPENSE_IT, self::EXPENSE_INSURANCE,
-        self::EXPENSE_LOAN, self::EXPENSE_MISC, self::EXPENSE_PERSONAL, self::EXPENSE_RENT, self::EXPENSE_REPAIRS,
-        self::EXPENSE_SERVICES, self::EXPENSE_SUPPLIES, self::EXPENSE_TAX, self::EXPENSE_TRANSPORT, self::EXPENSE_WAGES,
-        self::CATEGORY_UNDEFINED
+        self::INCOME_CASH_JOB, self::INCOME_INVOICE, self::INCOME_LOAN_REPAYMENT, self::INCOME_REBATE,
+        self::EXPENSE_ACCOMMODATION, self::EXPENSE_ACCOUNTANCY, self::EXPENSE_BILL, self::EXPENSE_EQUIPMENT,
+        self::EXPENSE_EQUPIMENT_HIRE, self::EXPENSE_FOOD, self::EXPENSE_FUEL, self::EXPENSE_GENERAL, self::EXPENSE_IT,
+        self::EXPENSE_INSURANCE, self::EXPENSE_LOAN, self::EXPENSE_MISC, self::EXPENSE_PERSONAL, self::EXPENSE_RENT,
+        self::EXPENSE_REPAIRS, self::EXPENSE_SERVICES, self::EXPENSE_SUPPLIES, self::EXPENSE_TAX,
+        self::EXPENSE_TRANSPORT, self::EXPENSE_TRAINING, self::EXPENSE_WAGES, self::CATEGORY_UNDEFINED
     ];
 
     /** @var string $value */
